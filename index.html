@@ -1,0 +1,196 @@
+ <html>
+    <head>
+        <title>{Title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
+    <style>
+    
+    body{
+        margin: 0px;
+        padding: 0px;
+        background-color:#240000;
+        
+    }
+    #cover_photo{
+        width:99vw;
+        height:99vh;
+        image-rendering: pixelated;
+        position:absolute;
+        
+    }
+    #title_element{
+        position: absolute;
+        height: 99vh;
+        width: 20vw;
+        right:0px;
+        background-color:#240000 ;
+    }
+    #title_text{
+        color: #8cdaff;
+        font-size: 5vw;
+        font-family: VT323;
+        padding-top: 40vh;
+        text-align: center;
+    }
+    #desc_text{
+        color: #5585d9;
+        font-size: 2vw;
+        font-family: VT323;
+        text-align: center;
+    }
+    .like_button{
+        display: inline;
+    }
+    .like_button:hover{
+        filter: brightness(0) saturate(100%) invert(76%) sepia(17%) saturate(1299%) hue-rotate(174deg) brightness(104%) contrast(101%);
+    }
+    
+    .liked{
+        filter: brightness(0) saturate(100%) invert(64%) sepia(57%) saturate(4380%) hue-rotate(196deg) brightness(89%) contrast(89%);
+    }
+    .liked:hover{
+        filter: brightness(0) saturate(100%) invert(64%) sepia(57%) saturate(4380%) hue-rotate(196deg) brightness(89%) contrast(89%);
+    }
+    .reblog_button{
+        display: inline;
+    }
+    .reblog_button svg{
+        fill: #5585d9;
+    }
+    element.style{
+        display: inline;
+    }
+    </style>
+    
+    <body>
+        <script>
+            let url_array = [];
+            var like_array = [];
+            var caption_array = [];
+            var cur_length = 0;
+            var tags_array =  [];
+            let str = "";
+        </script>
+        {block:Posts}
+        {block:Photo}
+        <script>
+            
+            console.log("new image: {PhotoURL-500}");
+            url_array.push("{PhotoURL-500}");
+            like_array.push('{LikeButton}');
+            caption_array.push('{Caption}');
+            console.log(caption_array);
+            cur_length = url_array.length;
+            str = "";
+            {block:Tags}
+                str += "#" + '{Tag}' + " ";
+            {/block:Tags}
+            tags_array.push(str);
+            console.log(tags_array);
+        </script>
+        {/block:Photo}
+        {/block:Posts}
+        
+        <div id = "blocks">
+            <img src = "{HeaderImage}" id = "cover_photo"></img>
+            
+            <div id = "title_element">
+                <div id = "title_text">
+                    {Title}
+                </div>
+                <div id = "desc_text">
+                    {Description}
+                </div>
+            </div>
+        </div>
+        
+        
+        <script>
+            let arcane_img = cur_length - 4;
+            let counter = 0;
+            for(let i = 0; i < cur_length; i++){
+                //if(i==arcane_img)
+                    //continue;
+                
+                //let left = 30 *(counter%3);
+                
+                let post = document.createElement("div");
+                post.style.position = "absolute";
+                //post.style.top = "calc(100vh + "+top+"vw)"
+                //post.style.left = left + "vw";
+                switch(i%3){
+                    case 0:
+                        post.style.left = "16px";
+                        break;
+                    case 1:
+                        post.style.left = "50%";
+                        post.style.transform = "translateX(-50%)";
+                        break;
+                    case 2:
+                        post.style.right = "16px";
+                        break;
+                }
+                let elementHeight = 40;
+                let rowNumber = parseInt(counter/3)
+                let top = elementHeight * rowNumber;
+                post.style.top = "calc(100vh + " + top+"vw + " + (rowNumber * 16) + "px)";
+                post.style.height = "40vw";
+                post.style.width = "30vw";
+                post.style.backgroundColor = "#ffffff"; //"#bbf3ff";
+                post.style.textAlign = "center"
+                let imageHolder = document.createElement("div");
+                imageHolder.style.position = "relative";
+                imageHolder.style.height = "30vw";
+                imageHolder.style.width = "30vw";
+                //imageHolder.style.backgroundColor = "blue";
+                
+                
+                let image = document.createElement("img");
+                image.style.position = "absolute"
+                image.style.width = "90%";
+                image.setAttribute("src", url_array[i]);
+                //image.style.paddingTop = "10%";
+                image.style.top = "50%";
+                image.style.left = "50%";
+                image.style.transform = "translate(-50%,-50%)";
+                let descHolder = document.createElement("div");
+                descHolder.style.position = "relative";
+                descHolder.style.textAlign = "left"
+                //descHolder.style.paddingLeft = "16px";
+                let line = document.createElement("hr")
+                line.style.width = "70%"
+               // descHolder.style.backgroundColor = "blue";
+                descHolder.style.width = "30vw";
+                descHolder.style.height = "10vw";
+                let buttonHolder = document.createElement("div");
+                buttonHolder.innerHTML = like_array[i];
+                buttonHolder.style.paddingLeft = "16px";
+                let caption = document.createElement("div")
+                caption.innerHTML = caption_array[i];
+                caption.style.paddingLeft = "16px"
+                caption.style.fontFamily = "Verdana";
+                caption.style.fontSize = "1vw";
+                let tags = document.createElement("div");
+                tags.innerHTML = tags_array[i];
+                tags.style.paddingLeft = "16px"
+                tags.style.fontFamily = "Verdana";
+                tags.style.fontSize = "0.7vw";
+                tags.style.background = "linear-gradient(90deg, rgba(140,218,255,1) 0%, rgba(85,133,217,1) 100%)"
+                tags.style.webkitBackgroundClip = "text";
+                tags.style.webkitTextFillColor = "transparent"
+                descHolder.appendChild(line)
+                descHolder.appendChild(buttonHolder)
+                descHolder.appendChild(caption);
+                descHolder.appendChild(tags);
+                imageHolder.appendChild(image);
+                post.appendChild(imageHolder);
+                post.appendChild(descHolder);
+                blocks.appendChild(post);
+                
+                counter++;
+                
+            }
+        </script>
+    </body>
+</html>
